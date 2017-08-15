@@ -4,6 +4,100 @@
   
     
     <entry>
+      <title><![CDATA[01环境安装]]></title>
+      <url>http://chenyingxi.github.io/2017/08/15/spring-kafka%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8F%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01/</url>
+      <content type="html"><![CDATA[<p>   最近公司项目开始使用Kafka，于是我对kafka进行了学习研究，阅读了<a href="http://kafka.apache.org/" target="_blank" rel="external">kafka的官网</a> 及一些相关的技术博客，感觉知识点比较零散。于是在项目完成之后考虑写这篇博客。一是归纳巩固一下知识点；二是分享一下使用经验，如有错误，欢迎指出！。</p>
+<p><strong>安装kafka所需环境(Jdk,Zookeeper,Kafka,Maven(略))</strong></p>
+<h3 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h3><pre><code>1 官网下载JDK：http://www.oracle.com/technetwork/java/javase/downloads
+/index-jsp-138363.html.选择满足条件的jdk安装
+2 安装完成后需要添加以下环境变量（右键点击“我的电脑” -&gt; &quot;高级系统设置&quot; -&gt; &quot;环境变量&quot;）
+    JAVA_HOME: C:\Program Files (x86)\Java\jre1.8.0_60（这个是默认安装路径，
+      如果安装过程中更改了安装目录，把更改后的路径填上就行了）
+       PATH: 在现有的值后面添加&quot;; %JAVA_HOME%\bin&quot;
+3 打开cmd运行 &quot;java -version&quot; 查看当前系统Java的版本：
+</code></pre><h3 id="安装运行zookeeper"><a href="#安装运行zookeeper" class="headerlink" title="安装运行zookeeper"></a>安装运行zookeeper</h3><pre><code>Kafka的运行依赖于Zookeeper，所以在运行Kafka之前我们需要安装并运行Zookeeper
+1 下载安装文件： http://zookeeper.apache.org/releases.html
+2 解压文件（本文解压到 D:\zookeeper-3.4.8）
+3 打开D:\zookeeper-3.4.8\conf，把zoo_sample.cfg重命名成zoo.cfg,修改
+  zoo.cfg内容（dataDir的值改成“:\zookeeper-3.4.8\data”）
+5 添加如下系统变量：
+    ZOOKEEPER_HOME: D:\zookeeper-3.4.8
+    Path: 在现有的值后面添加 &quot;;%ZOOKEEPER_HOME%\bin;&quot;
+6 运行Zookeeper: window情况下点击D:\zookeeper-3.4.8\bin\zkServer.cmd
+</code></pre><h3 id="安装kafka"><a href="#安装kafka" class="headerlink" title="安装kafka:"></a>安装kafka:</h3><pre><code>1 下载安装文件： http://kafka.apache.org/downloads.html
+2 解压文件（本文解压到 D:\kafka_2.11-0.10.0.1）
+3 打开D:\kafka_2.11-0.10.0.1\config
+4 从文本编辑器里打开 server.properties 修改log.dirs的值改成 
+   “D:\kafka_2.11-0.10.0.1\kafka-logs”
+</code></pre><h4 id="运行kafka"><a href="#运行kafka" class="headerlink" title="运行kafka:"></a>运行kafka:</h4><pre><code>1 打开cmd 进入kafka文件目录: cd /d D:\kafka_2.11-0.10.0.1\
+2 输入并执行以打开kafka:
+.\bin\windows\kafka-server-start.bat .\config\server.properties
+</code></pre><h4 id="创建topics"><a href="#创建topics" class="headerlink" title="创建topics:"></a>创建topics:</h4><pre><code>1 打开cmd 并进入D:\kafka_2.11-0.10.0.1\bin\windows
+2 创建一个topic：kafka-topics.bat --create --zookeeper localhost:2181
+ --replication-factor 1 --partitions 1 --topic test
+</code></pre><h4 id="运行生产者"><a href="#运行生产者" class="headerlink" title="运行生产者"></a>运行生产者</h4><pre><code>1 打开cmd 并进入D:\kafka_2.11-0.10.0.1\bin\windows
+2 kafka-console-producer.bat --broker-list localhost:9092 
+    --topic test
+</code></pre><h4 id="运行消费者"><a href="#运行消费者" class="headerlink" title="运行消费者"></a>运行消费者</h4><pre><code>1 cd /d D:\kafka_2.11-0.10.0.1\bin\windows
+2 kafka-console-consumer.bat --zookeeper localhost:2181 
+ --topic test
+</code></pre><p>参考：<a href="http://kafka.apache.org/quickstart" target="_blank" rel="external">http://kafka.apache.org/quickstart</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[02 Kafka-JAVA客户端编程]]></title>
+      <url>http://chenyingxi.github.io/2017/08/15/spring-kafka%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8F%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-02/</url>
+      <content type="html"><![CDATA[<p>  本博客讨论的kafka版本均大于0.8。kafka0.9版本之前的consumer-API包含高级API及低级API</p>
+<blockquote>
+<p>0.8文档: <a href="http://kafka.apache.org/081/documentation.html（消费者包含高级api，低级api）" target="_blank" rel="external">http://kafka.apache.org/081/documentation.html（消费者包含高级api，低级api）</a><br>最近文档: <a href="http://kafka.apache.org/documentation/" target="_blank" rel="external">http://kafka.apache.org/documentation/</a></p>
+</blockquote>
+<h3 id="基于Java进行Kafka编程"><a href="#基于Java进行Kafka编程" class="headerlink" title="基于Java进行Kafka编程"></a>基于Java进行Kafka编程</h3><h4 id="引入kafka-clients包"><a href="#引入kafka-clients包" class="headerlink" title="引入kafka-clients包"></a>引入kafka-clients包</h4><pre><code> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.kafka&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;kafka-clients&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;0.11.0.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+版本请尽量与kafka保存一直，0.9版本以后版本相互之间影响不大
+</code></pre><h4 id="Java操作生产者"><a href="#Java操作生产者" class="headerlink" title="Java操作生产者"></a>Java操作生产者</h4><pre><code> [代码出处]:http://kafka.apache.org/0110/javadoc/index.html?
+        org/apache/kafka/clients/consumer/KafkaConsumer.html
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Properties props = new Properties();</span><br><span class="line">props.put(&quot;bootstrap.servers&quot;, &quot;localhost:9092&quot;);</span><br><span class="line">props.put(&quot;group.id&quot;, &quot;test&quot;);</span><br><span class="line">props.put(&quot;enable.auto.commit&quot;, &quot;false&quot;);</span><br><span class="line">props.put(&quot;key.deserializer&quot;, </span><br><span class="line">    &quot;org.apache.kafka.common.serialization.StringDeserializer&quot;);</span><br><span class="line">props.put(&quot;value.deserializer&quot;, </span><br><span class="line">&quot;org.apache.kafka.common.serialization.StringDeserializer&quot;);</span><br><span class="line">KafkaConsumer&lt;String, String&gt; consumer</span><br><span class="line">            = new KafkaConsumer&lt;&gt;(props);</span><br><span class="line">consumer.subscribe(Arrays.asList(&quot;foo&quot;, &quot;bar&quot;));</span><br><span class="line">final int minBatchSize = 200;</span><br><span class="line">List&lt;ConsumerRecord&lt;String, String&gt;&gt; buffer = new ArrayList&lt;&gt;();</span><br><span class="line">while (true) &#123;</span><br><span class="line">   ConsumerRecords&lt;String, String&gt; records = consumer.poll(100);</span><br><span class="line">   for (ConsumerRecord&lt;String, String&gt; record : records) &#123;</span><br><span class="line">        buffer.add(record);</span><br><span class="line">    &#125;</span><br><span class="line">    if (buffer.size() &gt;= minBatchSize) &#123;</span><br><span class="line">        insertIntoDb(buffer);</span><br><span class="line">        consumer.commitSync();</span><br><span class="line">        buffer.clear();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</code></pre><h4 id="Java操作消费者"><a href="#Java操作消费者" class="headerlink" title="Java操作消费者"></a>Java操作消费者</h4><pre><code>  [代码出处]: http://kafka.apache.org/0110/javadoc/index.html?
+  org/apache/kafka/clients/consumer/KafkaConsumer.html
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Properties props = new Properties();</span><br><span class="line">props.put(&quot;bootstrap.servers&quot;, &quot;localhost:9092&quot;);</span><br><span class="line">props.put(&quot;acks&quot;, &quot;all&quot;);</span><br><span class="line">props.put(&quot;retries&quot;, 0);</span><br><span class="line">props.put(&quot;batch.size&quot;, 16384);</span><br><span class="line">props.put(&quot;linger.ms&quot;, 1);</span><br><span class="line">props.put(&quot;buffer.memory&quot;, 33554432);</span><br><span class="line">props.put(&quot;key.serializer&quot;, </span><br><span class="line">   &quot;org.apache.kafka.common.serialization.StringSerializer&quot;);</span><br><span class="line">props.put(&quot;value.serializer&quot;, </span><br><span class="line">   &quot;org.apache.kafka.common.serialization.StringSerializer&quot;);</span><br><span class="line">        </span><br><span class="line">Producer&lt;String, String&gt; producer = new KafkaProducer&lt;&gt;(props);</span><br><span class="line">for (int i = 0; i &lt; 100; i++)</span><br><span class="line">    producer.send(new ProducerRecord&lt;String, String&gt;</span><br><span class="line">    (&quot;my-topic&quot;, Integer.toString(i), Integer.toString(i)));</span><br><span class="line">        </span><br><span class="line">producer.close();</span><br></pre></td></tr></table></figure>
+</code></pre><h4 id="补充说明：kafka消费者主要的逻辑是KafkaConsumer构造方法及poll方法"><a href="#补充说明：kafka消费者主要的逻辑是KafkaConsumer构造方法及poll方法" class="headerlink" title="补充说明：kafka消费者主要的逻辑是KafkaConsumer构造方法及poll方法"></a>补充说明：kafka消费者主要的逻辑是KafkaConsumer构造方法及poll方法</h4><p>有机会会出kafka-consumer的源码解读。以下是我阅读kafka的一些注释笔记：<br>类：org.apache.kafka.clients.consumer.kafkaconsumer</p>
+<pre><code>private KafkaConsumer(ConsumerConfig config,Deserializer&lt;K&gt; keyDeserializer,
+    Deserializer&lt;V&gt; valueDeserializer) { 略}
+</code></pre><ul>
+<li>KafkaConsumer是一个纯粹的单线程程序，后面所讲的所有机制(包括coordinator，rebalance, heartbeat等)，</li>
+<li>都是在这个单线程的poll函数里面完成的。也因此，在consumer的代码内部，没有锁的出现。</li>
+<li>@see #poll(long)</li>
+<li>通过KafkaConsumer的构造函数，可知consumer有以下几个核心部件：</li>
+<li>{@link Metadata} : 存储Topic/Partion与broker的映射关系</li>
+<li>{@link NetworkClient}:网络层 A network client for asynchronous request/response network i/o.</li>
+<li>{@link ConsumerNetworkClient}: Higher level consumer access to the network layer //对NetworkClient的封装，非线程安全</li>
+<li>{@link ConsumerCoordinator}:只是client端的类，只是和服务端的GroupCoordinator通信的介质。（broker端的Coordinator 负责reblance、Offset提交、心跳）</li>
+<li>{@link SubscriptionState}: consumer的Topic、Partition的offset状态维护</li>
+<li>{@link Fetcher}: manage the fetching process with the brokers. //获取消息<br>*</li>
+<li>kafkaConsumer的所有构造方法都调用下面这个构造方法，</li>
+<li>主要功能就是基于配置文件和ConsumerConfig，CommonClientConfigs一些默认配置参数实例化核心部件</li>
+<li>@see ConsumerConfig</li>
+<li>@see org.apache.kafka.clients.CommonClientConfigs                  </li>
+</ul>
+<pre><code>public ConsumerRecords&lt;K, V&gt; poll(long timeout) {  略}  
+</code></pre><ul>
+<li>kafka获取数据的核心方法:</li>
+<li>消费的规则如下：</li>
+<li>● 一个partition只能被同一个ConsumersGroup的一个线程所消费.</li>
+<li>● 线程数小于partition数，某些线程会消费多个partition.</li>
+<li>● 线程数等于partition数，一个线程正好消费一个线程.</li>
+<li>● 当添加消费者线程时，会触发rebalance，partition的分配发送变化.</li>
+<li>● 同一个partition的offset保证消费有序，不同的partition消费不保证顺序.</li>
+<li>传入参数为拉取时间，即多长时间向broker发送请求</li>
+<li>当前方法的 是客户端拉取数据的核心方法，负责从broker拉取信息</li>
+<li>@see #pollOnce</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Hello World]]></title>
       <url>http://chenyingxi.github.io/2016/05/12/hello-world/</url>
       <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
