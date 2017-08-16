@@ -84,22 +84,28 @@
 
 
 
-<meta name="description" content="最近公司项目开始使用Kafka，于是我对kafka进行了学习研究，阅读了kafka的官网 及一些相关的技术博客，感觉知识点比较零散。于是在项目完成之后考虑写这篇博客。一是归纳巩固一下知识点；二是分享一下使用经验，如有错误，欢迎指出！。
-安装kafka所需环境(Jdk,Zookeeper,Kafka,Maven(略))
-安装JDK1 官网下载JDK：http://www.oracle.com/">
+<meta name="description" content="为什么使用Spring-kafka上篇文章已经基于kafka官网的API说明了一下怎么使用kafka-client，对于不过在生产环境中
+最好将kafka集成到spring中，这样能够有效的对于业务人员屏蔽kafka逻辑。同时spring-kafka对于
+kafka-client进行了一些封装跟扩展。总之spring的东西还是很靠谱的。
+
+使用spring需要引入spring-kafka的包（该j">
 <meta property="og:type" content="article">
-<meta property="og:title" content="01环境安装">
-<meta property="og:url" content="http://chenyingxi.github.io/2017/08/15/spring-kafka的使用及源码解析-01/index.html">
+<meta property="og:title" content="03 开始使用Spring-kafka">
+<meta property="og:url" content="http://chenyingxi.github.io/2017/08/16/spring-kafka的使用及源码解析-03/index.html">
 <meta property="og:site_name" content="陈映西的博客">
-<meta property="og:description" content="最近公司项目开始使用Kafka，于是我对kafka进行了学习研究，阅读了kafka的官网 及一些相关的技术博客，感觉知识点比较零散。于是在项目完成之后考虑写这篇博客。一是归纳巩固一下知识点；二是分享一下使用经验，如有错误，欢迎指出！。
-安装kafka所需环境(Jdk,Zookeeper,Kafka,Maven(略))
-安装JDK1 官网下载JDK：http://www.oracle.com/">
-<meta property="og:updated_time" content="2017-08-16T01:06:37.876Z">
+<meta property="og:description" content="为什么使用Spring-kafka上篇文章已经基于kafka官网的API说明了一下怎么使用kafka-client，对于不过在生产环境中
+最好将kafka集成到spring中，这样能够有效的对于业务人员屏蔽kafka逻辑。同时spring-kafka对于
+kafka-client进行了一些封装跟扩展。总之spring的东西还是很靠谱的。
+
+使用spring需要引入spring-kafka的包（该j">
+<meta property="og:updated_time" content="2017-08-16T02:25:09.894Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="01环境安装">
-<meta name="twitter:description" content="最近公司项目开始使用Kafka，于是我对kafka进行了学习研究，阅读了kafka的官网 及一些相关的技术博客，感觉知识点比较零散。于是在项目完成之后考虑写这篇博客。一是归纳巩固一下知识点；二是分享一下使用经验，如有错误，欢迎指出！。
-安装kafka所需环境(Jdk,Zookeeper,Kafka,Maven(略))
-安装JDK1 官网下载JDK：http://www.oracle.com/">
+<meta name="twitter:title" content="03 开始使用Spring-kafka">
+<meta name="twitter:description" content="为什么使用Spring-kafka上篇文章已经基于kafka官网的API说明了一下怎么使用kafka-client，对于不过在生产环境中
+最好将kafka集成到spring中，这样能够有效的对于业务人员屏蔽kafka逻辑。同时spring-kafka对于
+kafka-client进行了一些封装跟扩展。总之spring的东西还是很靠谱的。
+
+使用spring需要引入spring-kafka的包（该j">
 
 
 
@@ -117,7 +123,7 @@
   };
 </script>
 
-  <title> 01环境安装 | 陈映西的博客 </title>
+  <title> 03 开始使用Spring-kafka | 陈映西的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -280,7 +286,7 @@
             
             
               
-                01环境安装
+                03 开始使用Spring-kafka
               
             
           </h1>
@@ -292,8 +298,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-08-15T15:54:16+08:00" content="2017-08-15">
-              2017-08-15
+            <time itemprop="dateCreated" datetime="2017-08-16T15:54:16+08:00" content="2017-08-16">
+              2017-08-16
             </time>
           </span>
 
@@ -334,8 +340,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/08/15/spring-kafka的使用及源码解析-01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/15/spring-kafka的使用及源码解析-01/" itemprop="commentsCount"></span>
+                <a href="/2017/08/16/spring-kafka的使用及源码解析-03/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/16/spring-kafka的使用及源码解析-03/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -358,43 +364,103 @@
       
 
       
-        <p>   最近公司项目开始使用Kafka，于是我对kafka进行了学习研究，阅读了<a href="http://kafka.apache.org/" target="_blank" rel="external">kafka的官网</a> 及一些相关的技术博客，感觉知识点比较零散。于是在项目完成之后考虑写这篇博客。一是归纳巩固一下知识点；二是分享一下使用经验，如有错误，欢迎指出！。</p>
-<p><strong>安装kafka所需环境(Jdk,Zookeeper,Kafka,Maven(略))</strong></p>
-<h3 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h3><pre><code>1 官网下载JDK：http://www.oracle.com/technetwork/java/javase/downloads
-/index-jsp-138363.html.选择满足条件的jdk安装
-2 安装完成后需要添加以下环境变量（右键点击“我的电脑” -&gt; &quot;高级系统设置&quot; -&gt; &quot;环境变量&quot;）
-    JAVA_HOME: C:\Program Files (x86)\Java\jre1.8.0_60（这个是默认安装路径，
-      如果安装过程中更改了安装目录，把更改后的路径填上就行了）
-       PATH: 在现有的值后面添加&quot;; %JAVA_HOME%\bin&quot;
-3 打开cmd运行 &quot;java -version&quot; 查看当前系统Java的版本：
-</code></pre><h3 id="安装运行zookeeper"><a href="#安装运行zookeeper" class="headerlink" title="安装运行zookeeper"></a>安装运行zookeeper</h3><pre><code>Kafka的运行依赖于Zookeeper，所以在运行Kafka之前我们需要安装并运行Zookeeper
-1 下载安装文件： http://zookeeper.apache.org/releases.html
-2 解压文件（本文解压到 D:\zookeeper-3.4.8）
-3 打开D:\zookeeper-3.4.8\conf，把zoo_sample.cfg重命名成zoo.cfg,修改
-  zoo.cfg内容（dataDir的值改成“:\zookeeper-3.4.8\data”）
-5 添加如下系统变量：
-    ZOOKEEPER_HOME: D:\zookeeper-3.4.8
-    Path: 在现有的值后面添加 &quot;;%ZOOKEEPER_HOME%\bin;&quot;
-6 运行Zookeeper: window情况下点击D:\zookeeper-3.4.8\bin\zkServer.cmd
-</code></pre><h3 id="安装kafka"><a href="#安装kafka" class="headerlink" title="安装kafka:"></a>安装kafka:</h3><pre><code>1 下载安装文件： http://kafka.apache.org/downloads.html
-2 解压文件（本文解压到 D:\kafka_2.11-0.10.0.1）
-3 打开D:\kafka_2.11-0.10.0.1\config
-4 从文本编辑器里打开 server.properties 修改log.dirs的值改成 
-   “D:\kafka_2.11-0.10.0.1\kafka-logs”
-</code></pre><h4 id="运行kafka"><a href="#运行kafka" class="headerlink" title="运行kafka:"></a>运行kafka:</h4><pre><code>1 打开cmd 进入kafka文件目录: cd /d D:\kafka_2.11-0.10.0.1\
-2 输入并执行以打开kafka:
-.\bin\windows\kafka-server-start.bat .\config\server.properties
-</code></pre><h4 id="创建topics"><a href="#创建topics" class="headerlink" title="创建topics:"></a>创建topics:</h4><pre><code>1 打开cmd 并进入D:\kafka_2.11-0.10.0.1\bin\windows
-2 创建一个topic：kafka-topics.bat --create --zookeeper localhost:2181
- --replication-factor 1 --partitions 1 --topic test
-</code></pre><h4 id="运行生产者"><a href="#运行生产者" class="headerlink" title="运行生产者"></a>运行生产者</h4><pre><code>1 打开cmd 并进入D:\kafka_2.11-0.10.0.1\bin\windows
-2 kafka-console-producer.bat --broker-list localhost:9092 
-    --topic test
-</code></pre><h4 id="运行消费者"><a href="#运行消费者" class="headerlink" title="运行消费者"></a>运行消费者</h4><pre><code>1 cd /d D:\kafka_2.11-0.10.0.1\bin\windows
-2 kafka-console-consumer.bat --zookeeper localhost:2181 
- --topic test
-</code></pre><p>参考：<a href="http://kafka.apache.org/quickstart" target="_blank" rel="external">http://kafka.apache.org/quickstart</a></p>
+        <h3 id="为什么使用Spring-kafka"><a href="#为什么使用Spring-kafka" class="headerlink" title="为什么使用Spring-kafka"></a>为什么使用Spring-kafka</h3><pre><code>上篇文章已经基于kafka官网的API说明了一下怎么使用kafka-client，对于不过在生产环境中
+最好将kafka集成到spring中，这样能够有效的对于业务人员屏蔽kafka逻辑。同时spring-kafka对于
+kafka-client进行了一些封装跟扩展。总之spring的东西还是很靠谱的。
 
+使用spring需要引入spring-kafka的包（该jar已经包含了kafka-client-0.9.0.1.jar）
+&lt;dependency&gt;  
+  &lt;groupId&gt;org.springframework.kafka&lt;/groupId&gt;  
+  &lt;artifactId&gt;spring-kafka&lt;/artifactId&gt;  
+  &lt;version&gt;1.0.5&lt;/version&gt;  
+&lt;/dependency&gt;  
+</code></pre><h3 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h3><p>   公司项目使用了spring-boot基于spring autoconfigure进行了自动配置，主要代码在org.springframework.boot.autoconfigure.kafka包下（基于配置文件读取配置，实例化kafka所需bean）。对于传统spring的spring-kafka的配置当时使用的时候参考了这篇技术博客：<a href="http://blog.csdn.net/molingduzun123/article/details/51785141。本篇博客主要是基于spring配置去说明spring-kafka主要功能类，基于springBoot情况下主要功能类已经帮助生成。" target="_blank" rel="external">http://blog.csdn.net/molingduzun123/article/details/51785141。本篇博客主要是基于spring配置去说明spring-kafka主要功能类，基于springBoot情况下主要功能类已经帮助生成。</a></p>
+<p>   kafka-producer.xml配置文件关键配置:<br>      producerProperties:kafka的一些基本配置信息，具体参数及作用在官方文档有提供。<br>      producerFactory：kafka生成的工厂方法<br>      KafkaTemplate：具体的kafka生产者模板类，开发者通过注入KafkaTemplate向kafka<br>      发送消息</p>
+<pre><code>&lt;!-- 创建kafkatemplate需要使用的producerfactory bean --&gt;
+  &lt;bean id=&quot;producerProperties&quot; class=&quot;java.util.HashMap&quot;&gt;  
+    &lt;constructor-arg&gt;  
+      &lt;map&gt;  
+        &lt;entry key=&quot;bootstrap.servers&quot; value=&quot;${bootstrap.servers}&quot;/&gt;  
+        &lt;entry key=&quot;group.id&quot; value=&quot;0&quot;/&gt;  
+        &lt;entry key=&quot;retries&quot; value=&quot;10&quot;/&gt;  
+        &lt;entry key=&quot;batch.size&quot; value=&quot;16384&quot;/&gt;  
+        &lt;entry key=&quot;linger.ms&quot; value=&quot;1&quot;/&gt;  
+        &lt;entry key=&quot;buffer.memory&quot; value=&quot;33554432&quot;/&gt;  
+        &lt;entry key=&quot;key.serializer&quot; value=&quot;org.apache.kafka.common.serialization.IntegerSerializer&quot;/&gt;  
+        &lt;entry key=&quot;value.serializer&quot; value=&quot;org.apache.kafka.common.serialization.StringSerializer&quot;/&gt;  
+      &lt;/map&gt;  
+    &lt;/constructor-arg&gt;  
+ &lt;/bean&gt;  
+ &lt;!-- 创建kafkatemplate需要使用的producerfactory bean --&gt;  
+ &lt;bean id=&quot;producerFactory&quot; class=&quot;org.springframework.kafka.core.DefaultKafkaProducerFactory&quot;&gt;  
+    &lt;constructor-arg&gt;  
+        &lt;ref bean=&quot;producerProperties&quot;/&gt;  
+    &lt;/constructor-arg&gt;  
+ &lt;/bean&gt;  
+
+ &lt;!-- 创建kafkatemplate bean，使用的时候，只需要注入这个bean，即可使用template的send消息方法 --&gt;  
+ &lt;bean id=&quot;KafkaTemplate&quot; class=&quot;org.springframework.kafka.core.KafkaTemplate&quot;&gt;  
+    &lt;constructor-arg ref=&quot;producerFactory&quot;/&gt;  
+    &lt;constructor-arg name=&quot;autoFlush&quot; value=&quot;true&quot;/&gt;  
+    &lt;property name=&quot;defaultTopic&quot; value=&quot;mhb-test&quot;/&gt;  
+ &lt;/bean&gt;  
+</code></pre><p>   JAVA生产者代码    </p>
+<pre><code>  public class KafkaTest {  
+    @Autowired  
+    private KafkaTemplate&lt;Integer, String&gt; kafkaTemplate;  
+
+    @Test  
+    public void testTemplateSend(){  
+        kafkaTemplate.sendDefault(&quot;haha111&quot;);  
+    }  
+}  
+</code></pre><p>  注：本人实际项目中使用@kafkalistener注解方式实现消费者，个人比较推荐注解方式！</p>
+<p>   kafka-consumer.xml配置文件关键配置:<br>    consumerProperties：kafka的一些基本配置信息，具体参数及作用在官方文档有提供。<br>    consumerFactory：消费类的工厂模式<br>    messageListernerConsumerService:实际执行消息消费的类<br>    containerProperties:主要是实际执行消息消费的类<br>    messageListenerContainer：kafka message的监听器</p>
+<pre><code>&lt;!-- 定义consumer的参数 --&gt;  
+ &lt;bean id=&quot;consumerProperties&quot; class=&quot;java.util.HashMap&quot;&gt;  
+    &lt;constructor-arg&gt;  
+        &lt;map&gt;  
+            &lt;entry key=&quot;bootstrap.servers&quot; value=&quot;${bootstrap.servers}&quot;/&gt;  
+            &lt;entry key=&quot;group.id&quot; value=&quot;0&quot;/&gt;  
+            &lt;entry key=&quot;enable.auto.commit&quot; value=&quot;true&quot;/&gt;  
+            &lt;entry key=&quot;auto.commit.interval.ms&quot; value=&quot;1000&quot;/&gt;  
+            &lt;entry key=&quot;session.timeout.ms&quot; value=&quot;15000&quot;/&gt;  
+            &lt;entry key=&quot;key.deserializer&quot; value=&quot;org.apache.kafka.common.serialization.IntegerDeserializer&quot;/&gt;  
+            &lt;entry key=&quot;value.deserializer&quot; value=&quot;org.apache.kafka.common.serialization.StringDeserializer&quot;/&gt;  
+        &lt;/map&gt;  
+    &lt;/constructor-arg&gt;  
+ &lt;/bean&gt;  
+
+ &lt;!-- 创建consumerFactory bean --&gt;  
+ &lt;bean id=&quot;consumerFactory&quot; class=&quot;org.springframework.kafka.core.DefaultKafkaConsumerFactory&quot;&gt;  
+    &lt;constructor-arg&gt;  
+        &lt;ref bean=&quot;consumerProperties&quot;/&gt;  
+    &lt;/constructor-arg&gt;  
+ &lt;/bean&gt;  
+
+ &lt;!-- 实际执行消息消费的类 --&gt;  
+ &lt;bean id=&quot;messageListernerConsumerService&quot; class=&quot;com.tonsonmiao.common.kafka.KafkaConsumer&quot;/&gt;  
+
+ &lt;!-- 消费者容器配置信息 --&gt;  
+ &lt;bean id=&quot;containerProperties&quot; class=&quot;org.springframework.kafka.listener.config.ContainerProperties&quot;&gt;  
+    &lt;constructor-arg value=&quot;mhb-test&quot;/&gt;  &lt;！--设置关注的topic--&gt;
+    &lt;property name=&quot;messageListener&quot; ref=&quot;messageListernerConsumerService&quot;/&gt;  
+ &lt;/bean&gt;  
+
+ &lt;!-- 创建kafkatemplate bean，使用的时候，只需要注入这个bean，即可使用template的send消息方法 --&gt;  
+ &lt;bean id=&quot;messageListenerContainer&quot; class=&quot;org.springframework.kafka.listener.KafkaMessageListenerContainer&quot; init-method=&quot;doStart&quot;&gt;  
+    &lt;constructor-arg ref=&quot;consumerFactory&quot;/&gt;  
+    &lt;constructor-arg ref=&quot;containerProperties&quot;/&gt;  
+ &lt;/bean&gt;  
+</code></pre><p>   Java代码</p>
+<pre><code> public class KafkaConsumer implements MessageListener&lt;Integer, String&gt;{  
+    @Override  
+    public void onMessage(ConsumerRecord&lt;Integer, String&gt; record) {  
+        System.out.println(record);  
+    }  
+
+}  
+</code></pre>
       
     </div>
 
@@ -484,8 +550,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/08/15/spring-kafka的使用及源码解析-01/"
-           data-title="01环境安装" data-url="http://chenyingxi.github.io/2017/08/15/spring-kafka的使用及源码解析-01/">
+      <div class="ds-thread" data-thread-key="2017/08/16/spring-kafka的使用及源码解析-03/"
+           data-title="03 开始使用Spring-kafka" data-url="http://chenyingxi.github.io/2017/08/16/spring-kafka的使用及源码解析-03/">
       </div>
     
   </div>
@@ -530,7 +596,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">4</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -576,7 +642,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装JDK"><span class="nav-number">1.</span> <span class="nav-text">安装JDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装运行zookeeper"><span class="nav-number">2.</span> <span class="nav-text">安装运行zookeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装kafka"><span class="nav-number">3.</span> <span class="nav-text">安装kafka:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#运行kafka"><span class="nav-number">3.1.</span> <span class="nav-text">运行kafka:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建topics"><span class="nav-number">3.2.</span> <span class="nav-text">创建topics:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行生产者"><span class="nav-number">3.3.</span> <span class="nav-text">运行生产者</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行消费者"><span class="nav-number">3.4.</span> <span class="nav-text">运行消费者</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么使用Spring-kafka"><span class="nav-number">1.</span> <span class="nav-text">为什么使用Spring-kafka</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补充说明"><span class="nav-number">2.</span> <span class="nav-text">补充说明</span></a></li></ol></div>
             
           </div>
         </section>
